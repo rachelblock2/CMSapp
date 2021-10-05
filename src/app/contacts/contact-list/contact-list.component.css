@@ -1,0 +1,12 @@
+img {
+    max-height: 50px;
+}
+
+.heading {
+    font-size: 15pt;
+    font-weight: bold;
+}
+
+.margin-top {
+    margin-top: 10px;
+}
