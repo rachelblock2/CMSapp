@@ -1,10 +1,14 @@
 <div class="container">
 <div class="row">
     <div class="col-md-5">
-        <cms-contact-list></cms-contact-list>
+        <cms-contact-list
+        (selectedContactEvent)="selectedContact = $event"></cms-contact-list>
     </div>
     <div class="col-md-7">
-        <cms-contact-detail></cms-contact-detail>
+        <cms-contact-detail
+        *ngIf="selectedContact;"
+        [contact]="selectedContact"></cms-contact-detail> 
+        <!--assign the value of the selectedContact variable to the contact class input variable you just defined in the ContactDetailComponent class.-->
     </div>
 </div>
 </div>
