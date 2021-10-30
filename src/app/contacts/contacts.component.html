@@ -4,10 +4,7 @@
         <cms-contact-list></cms-contact-list>
     </div>
     <div class="col-md-7">
-        <cms-contact-detail
-        *ngIf="selectedContact;"
-        [contact]="selectedContact"></cms-contact-detail> 
-        <!--assign the value of the selectedContact variable to the contact class input variable you just defined in the ContactDetailComponent class.-->
+        <router-outlet></router-outlet>
     </div>
 </div>
 </div>

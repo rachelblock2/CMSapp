@@ -6,8 +6,8 @@
         <div class="row">
           <div class="col-xs-12 btn-toolbar">
             <!-- How to put in correct order? -->
-            <button class="btn btn-danger pull-right">Delete</button>
-            <button class="btn btn-success pull-right">Edit</button>
+            <button (click)="onDelete()" class="btn btn-danger pull-right">Delete</button>
+            <button routerLink="edit" class="btn btn-success pull-right">Edit</button>
           </div>
         </div>
       </div>
