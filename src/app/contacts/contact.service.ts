@@ -56,7 +56,7 @@ export class ContactService {
   }
 
   updateContact(originalContact: Contact, newContact: Contact) {
-    if (!originalContact || newContact) {
+    if (!originalContact || !newContact) {
       return
     }
 

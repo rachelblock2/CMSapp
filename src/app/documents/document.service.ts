@@ -56,7 +56,7 @@ export class DocumentService {
   }
 
   updateDocument(originalDocument: Document, newDocument: Document) {
-    if (!originalDocument || newDocument) {
+    if (!originalDocument || !newDocument) {
       return
     };
 
@@ -64,7 +64,7 @@ export class DocumentService {
     if (pos < 0) {
       return
     };
-
+    
     newDocument.id = originalDocument.id;
     this.documents[pos] = newDocument;
     this.documentListChangedEvent.next(this.documents.slice());
