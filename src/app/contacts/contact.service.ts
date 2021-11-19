@@ -1,21 +1,19 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
 import { Contact } from './contact.model';
-import { MOCKCONTACTS } from './MOCKCONTACTS';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ContactService {
-  contactSelectedEvent = new EventEmitter<Contact>();
   contactListChangedEvent = new Subject<Contact[]>();
 
   contacts: Contact[] = [];
   maxContactId: number;
 
-  constructor() {
-    this.contacts = MOCKCONTACTS;
+  constructor(private http: HttpClient) {
     this.maxContactId = this.getMaxId();
   }
 
@@ -30,8 +28,17 @@ export class ContactService {
     return maxId
   }
 
-  getContacts(): Contact[] {
-    return this.contacts.slice();
+  getContacts() {
+    this.http.get<Contact[]>('https://cms-fall-2021-default-rtdb.firebaseio.com/contacts.json')
+    .subscribe((contacts: Contact[]) => {
+      this.contacts = contacts;
+      this.maxContactId = this.getMaxId();
+      this.contacts.sort((a, b) => (a.name > b.name) ? 1 :((b.name > a.name) ? -1 : 0));
+      console.log(this.contacts);
+      this.contactListChangedEvent.next(this.contacts.slice());
+    }, (error: any) => {
+      console.log(error.message);
+    })
   }
 
   getContact(id: string): Contact {
@@ -43,6 +50,15 @@ export class ContactService {
     return null;
   }
 
+  storeContacts() {
+    JSON.stringify(this.contacts);
+    const headers = new HttpHeaders().set('content-type', 'application/json');
+    this.http.put('https://cms-fall-2021-default-rtdb.firebaseio.com/contacts.json', this.contacts, {headers})
+    .subscribe(() => {
+      this.contactListChangedEvent.next(this.contacts.slice());
+    })
+  }
+
   addContact(newContact: Contact) {
     if (!newContact) {
       return
@@ -52,7 +68,7 @@ export class ContactService {
     newContact.id = this.maxContactId.toString();
 
     this.contacts.push(newContact);
-    this.contactListChangedEvent.next(this.contacts.slice());
+    this.storeContacts();
   }
 
   updateContact(originalContact: Contact, newContact: Contact) {
@@ -67,7 +83,7 @@ export class ContactService {
 
     newContact.id = originalContact.id;
     this.contacts[pos] = newContact;
-    this.contactListChangedEvent.next(this.contacts.slice());
+    this.storeContacts();
   }
 
   deleteContact(contact: Contact) {
@@ -80,7 +96,7 @@ export class ContactService {
     }
 
     this.contacts.splice(pos, 1);
-    this.contactListChangedEvent.next(this.contacts.slice());
+    this.storeContacts();
   }
 
 }

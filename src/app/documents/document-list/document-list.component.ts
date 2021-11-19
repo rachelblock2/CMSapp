@@ -10,7 +10,7 @@ import { DocumentService } from '../document.service';
   templateUrl: './document-list.component.html',
   styleUrls: ['./document-list.component.css']
 })
-export class DocumentListComponent implements OnInit {
+export class DocumentListComponent implements OnInit, OnDestroy {
   documents: Document[] = [];
   subscription: Subscription;
 
@@ -19,16 +19,16 @@ export class DocumentListComponent implements OnInit {
     private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.documents = this.documentService.getDocuments();
     this.subscription = this.documentService.documentListChangedEvent.subscribe(
       (documentsList: Document[]) => {
         this.documents = documentsList;
       }
-    )
+      )
+    this.documentService.getDocuments();
   }
 
-  // ngOnDestroy() {
-  //   this.documentService.documentListChangedEvent.unsubscribe();
-  // }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
 
 }

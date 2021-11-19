@@ -8,6 +8,9 @@ import { DocumentDetailComponent } from './documents/document-detail/document-de
 import { ContactDetailComponent } from './contacts/contact-detail/contact-detail.component';
 import { ContactEditComponent } from './contacts/contact-edit/contact-edit.component';
 import { ContactListComponent } from './contacts/contact-list/contact-list.component';
+import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from  '@angular/common/http';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/documents', pathMatch: 'full'},
@@ -27,6 +30,9 @@ const appRoutes: Routes = [
 
 @NgModule({
   imports: [
+    BrowserModule,
+    FormsModule,
+    HttpClientModule,
     RouterModule.forRoot(appRoutes)
   ],
   exports: [RouterModule] 
