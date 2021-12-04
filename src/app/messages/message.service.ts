@@ -10,29 +10,19 @@ import { Message } from './message.model'
 export class MessageService {
   messages: Message[] = [];
   messageListChangedEvent = new Subject<Message[]>();
-  maxMessageId: number;
 
-  constructor(private http: HttpClient) {
-    this.maxMessageId = this.getMaxId();
-  }
+  constructor(private http: HttpClient) {}
 
-  getMaxId(): number {
-    let maxId = 0;
-    for (let message of this.messages) {
-      let currentId = parseInt(message.id);
-      if (currentId > maxId) {
-        maxId = currentId;
-      }
-    }
-    return maxId
+  sendMessages() {
+    this.messageListChangedEvent.next(this.messages.slice());
   }
 
   getMessages() {
-    this.http.get<Message[]>('https://cms-fall-2021-default-rtdb.firebaseio.com/messages.json')
-    .subscribe((messages: Message[]) => {
-      this.messages = messages;
-      this.maxMessageId = this.getMaxId();
-      this.messageListChangedEvent.next(this.messages.slice());
+    this.http.get<{messages: Message[]}>('http://localhost:3000/messages')
+    .subscribe((response) => {
+      this.messages = response.messages;
+      console.log(this.messages);
+      this.sendMessages();
     }, (error: any) => {
       console.log(error.message);
     })
@@ -47,17 +37,26 @@ export class MessageService {
     return null;
   }
 
-  storeMessages() {
-    JSON.stringify(this.messages);
-    const headers = new HttpHeaders().set('content-type', 'application/json');
-    this.http.put('https://cms-fall-2021-default-rtdb.firebaseio.com/messages.json', this.messages, {headers})
-    .subscribe(() => {
-      this.messageListChangedEvent.next(this.messages.slice());
-    })
-  }
-
   addMessage(message: Message) {
-    this.messages.push(message);
-    this.storeMessages();
+    if (!message) {
+      return
+    }
+
+    // make sure id of the new Document is empty
+    message.id = '';
+
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+
+    // add to database
+    this.http.post<{ messageString: string, message: Message }>('http://localhost:3000/messages',
+      message,
+      { headers: headers })
+      .subscribe(
+        (responseData) => {
+          // add new document to documents
+          this.messages.push(responseData.message);
+          this.sendMessages();
+        }
+      );
   }
 }
