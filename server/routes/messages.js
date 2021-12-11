@@ -5,6 +5,7 @@ const Message = require('../models/message');
 
 router.get('/', (req, res, next) => {
     Message.find()
+        .populate('sender')
         .then(messages => {
             res.status(200).json({
                 messages: messages
@@ -24,14 +25,14 @@ router.get('/', (req, res, next) => {
     const message = new Message({
       id: maxMessageId,
       subject: req.body.subject,
-      msgText: req.body.message,
+      msgText: req.body.msgText,
       sender: req.body.sender
     });
   
     message.save()
       .then(createdMessage => {
         res.status(201).json({
-          message: 'Message added successfully',
+          messageString: 'Message added successfully',
           message: createdMessage
         });
       })
@@ -47,7 +48,7 @@ router.get('/', (req, res, next) => {
     Message.findOne({ id: req.params.id })
       .then(message => {
         message.subject = req.body.subject;
-        message.msgText = req.body.message;
+        message.msgText = req.body.msgText;
         message.sender = req.body.sender;
   
         Message.updateOne({ id: req.params.id }, message)

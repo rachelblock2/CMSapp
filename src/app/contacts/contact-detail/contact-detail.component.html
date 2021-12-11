@@ -1,8 +1,8 @@
 <div class="row">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h2>{{ contact.name }}</h2>
-        <img [src]="contact.imageUrl" alt="{{ contact.name }}" style="max-width: 70px;">
+        <h2>{{ contact?.name }}</h2>
+        <img [src]="contact?.imageUrl" alt="{{ contact?.name }}" style="max-width: 70px;">
         <div class="row">
           <div class="col-xs-12 btn-toolbar">
             <!-- How to put in correct order? -->
@@ -14,8 +14,8 @@
       <div class="panel-body">
           <div class="row">
               <div class="col-xs-12">
-                  <p>Email: {{ contact.email }}</p>
-                  <p>Phone: {{ contact.phone }}</p>
+                  <p>Email: {{ contact?.email }}</p>
+                  <p>Phone: {{ contact?.phone }}</p>
               </div>
             </div>
       </div>

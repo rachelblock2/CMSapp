@@ -24,20 +24,24 @@ export class ContactService {
     .subscribe((response) => {
       this.contacts = response.contacts;
       this.sortAndSend();
+      console.log(this.contacts);
     }, (error: any) => {
       console.log(error.message);
     })
   }
 
-  getContact(id: string): Contact {
-    console.log(this.contacts);
-    for (let contact of this.contacts) {
-      if (contact.id === id) {
-        console.log(contact);
-        return contact;
-      }
-    }
-    return null;
+  getContact(id: string) {
+    // console.log(this.contacts);
+    // for (let contact of this.contacts) {
+    //   console.log(id);
+    //   console.log(contact.id); //needs to be _?
+    //   if (contact.id === id) {
+    //     console.log(contact);
+    //     return contact;
+    //   }
+    // }
+    // return null;
+    return this.http.get<{message: string, contact: Contact}>('http://localhost:3000/contacts/' + id)
   }
 
   addContact(contact: Contact) {
@@ -56,7 +60,8 @@ export class ContactService {
       { headers: headers })
       .subscribe(
         (responseData) => {
-          // add new document to documents
+          // add new contact to contacts
+          contact.id = responseData.contact.id;
           this.contacts.push(responseData.contact);
           this.sortAndSend();
         }
@@ -84,6 +89,7 @@ export class ContactService {
       .subscribe(
         (responseData) => {
           this.contacts[pos] = newContact;
+          console.log(newContact);
           this.sortAndSend();
         }
       );

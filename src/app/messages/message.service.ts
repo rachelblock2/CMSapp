@@ -21,7 +21,6 @@ export class MessageService {
     this.http.get<{messages: Message[]}>('http://localhost:3000/messages')
     .subscribe((response) => {
       this.messages = response.messages;
-      console.log(this.messages);
       this.sendMessages();
     }, (error: any) => {
       console.log(error.message);
@@ -53,8 +52,9 @@ export class MessageService {
       { headers: headers })
       .subscribe(
         (responseData) => {
-          // add new document to documents
-          this.messages.push(responseData.message);
+          // add new message to messages
+          message.id = responseData.message.id
+          this.messages.push(message);
           this.sendMessages();
         }
       );

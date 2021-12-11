@@ -30,20 +30,25 @@ export class ContactEditComponent implements OnInit {
           return
         }
 
-        this.originalContact = this.contactService.getContact(this.id);
+        this.contactService.getContact(this.id)
+          .subscribe(contactData => {
+            this.originalContact = contactData.contact;
+          
 
-        if (!this.originalContact) {
-          return
-        }
+            if (!this.originalContact) {
+              return
+            }
 
-        this.editMode = true;
-        this.contact = JSON.parse(JSON.stringify(this.originalContact));
+            this.editMode = true;
+            console.log(this.editMode);
+            this.contact = JSON.parse(JSON.stringify(this.originalContact));
 
 
-        if (this.originalContact.group && this.originalContact.group.length > 0) {
-          this.groupContacts = JSON.parse(JSON.stringify(this.originalContact.group));
-          console.log(this.groupContacts);
-        }
+            if (this.originalContact.group && this.originalContact.group.length > 0) {
+              this.groupContacts = JSON.parse(JSON.stringify(this.originalContact.group));
+              console.log(this.groupContacts);
+            }
+      });
       }
     );
   }
